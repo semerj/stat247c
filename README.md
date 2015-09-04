@@ -20,7 +20,7 @@ Date | Topic |
 
 Due | Topic |
 :-- | :---- |
-9/14 | [Logistic Regression Review and Simulation](./hw1/Assignment1.pdf), [code](./Assignment1.do)
+9/14 | [Logistic Regression Review and Simulation](./hw1/Assignment1.pdf), [code](./hw1/Assignment1.do)
 
 
 ### Readings
