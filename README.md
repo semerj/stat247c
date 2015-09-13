@@ -25,3 +25,4 @@ Due | Topic |
 
 * [Chapter 1: Introduction ](./book/LongDataChapter1.pdf)
 * [Chapter 2: Graphical Analysis of Longitudinal Data](./book/LongDataChapter2.pdf)
+* [Chapter 3: Naive Cross-Sectional Analysis of Longitudinal Data](./book/LongDataChapter3.pdf)
