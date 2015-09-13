@@ -2,19 +2,14 @@
 
 [Syllabus](./PH 242C--STAT 247C Course Syllabus.pdf)
 
-### Lectures
+### Lectures & Labs
 
 Date | Topic |
 :--- | :---- |
-8/27 | [Introduction](./lecture/Chapter 1 Introduction  Fall 2015.pdf)
-9/1 | More intro
-9/3 | [Graphics](./lecture/Chapter 2 Graphics Fall 2015.pdf)
-
-### Labs
-
-Date | Topic |
-:-- | :----- |
-9/2 | [Theory vs. Simulation](./lab/lab-1.pdf) |
+8/27 | Lecture - [Introduction](./lecture/Chapter 1 Introduction  Fall 2015.pdf)
+9/1 | Lecture - More intro
+9/2 | Lab - [Theory vs. Simulation](./lab/lab-1.pdf) |
+9/3 | Lecture - [Graphics](./lecture/Chapter 2 Graphics Fall 2015.pdf)
 
 ### Assignments
 
