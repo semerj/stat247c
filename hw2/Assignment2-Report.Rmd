@@ -60,7 +60,7 @@ I used dummy variable notation for adding water treatment and movement variables
 
 The plots show the relationship between increasing sample size and the effects on $\mu$ and $\rho$. The red line indicates their true values. As we increase sample size, the closer our results get to the true value. See attached code. Output is below:
 
-```{r echo=FALSE, fig.height=3.5}
+```{r fig.height=3.5}
 set.seed(247)
 
 assignment2 = function(n=5000, numlist=c(20, 100, 1000)) {
