@@ -34,15 +34,15 @@ $$\textrm{logit}\{\textrm{E}(Y_{ijkl}=1 | X_{ijkl})\} = \beta_{0} + \beta_{1}^{w
 $$
 \begin{aligned}
   \textrm{logit}\{\textrm{E}(Y_{ijkl}=1 | X_{ijkl})\} =& \beta_{0} + \beta_{1}^{water}x_{1,ij} + \beta_{2}^{travel}x_{2,i} \\
-  &+ \gamma^{water}_{1}d^{house}_{1,ij} + ... + \gamma^{water}_{350}d^{house}_{350,ij} \\
-  &+ \nu^{travel}_{1}d^{village}_{1,i} + ... + \nu^{travel}_{10}d^{village}_{10,i} \\
+  &+ \gamma^{water}_{ij} (House_{ij} \times x^{water}_{ij}) \\
+  &+ \nu^{travel}_{i} (Village_{i} \times x^{travel}_{i}) \\
 \end{aligned}
 $$
 
-I used dummy variable notation for adding water treatment and movement variables to variable for household and village, respectively. 
+I created iteraction between $Household$ (indicator variable) and $Water$ and an interaction between $Village$ (indicator variable) and $Travel$ to allow for these effects to vary randomly.
 
-* $\gamma^{water}_{ij}d^{house}_{ij}$ represents the effect of water treatment on household $j$ in the $i^{th}$ village. There are a total of 350 individual households to estimate.
-* $\eta^{travel}_{i}d^{village}_{i}$ represents the effect of travel/movement in village $i$. There are 10 independent villages to estimate.
+* There are a total of 350 individual households to estimate, but we must also have a reference household for comparison. There will be a total of 349 coefficients to evaluate the effect of $Household$ and $Water$.
+* There are a total of 10 independent villages to estimate, but we must also have a reference village for comparison. There will be a total of 9 coefficients to evaluate the effect of $Village$ and $Water$.
 
 #2. Data-generating distributions for repeated measures data
 
