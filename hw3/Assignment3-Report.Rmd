@@ -1,0 +1,92 @@
+---
+title: "Assignment 3"
+author: "John Semerdjian"
+date: "October 19, 2015"
+output: pdf_document
+---
+
+1. On one plot, plot separate line plots of all subjects’ trajectories of strength versus week.
+```{r, fig.height=3.5}
+library(ggplot2)
+options(warn=-1)
+df = read.csv("../data/strength.csv", stringsAsFactors=F, header=T)
+df$tx = as.factor(df$tx)
+
+ggplot(df, aes(x=time, y=y, group=as.factor(id))) + 
+  geom_line(alpha=0.75) + facet_wrap(~tx) + 
+  theme(text = element_text(size=10)) +
+  xlab("Time") + ylab("Strength") +
+  ggtitle("Strength by Time and Treatment")
+```
+
+2. Fit a linear regression by subject, and repeat 1, replacing the strength with predicted strength based on these regressions
+
+```{r, fig.height=3.5}
+reg_pred = function(data, x) {
+  m = lm(y ~ time, data = df[df$id == x,])
+  p = predict(m, df[df$id == x,])
+  return(p)
+}
+
+df$pred = unlist(lapply(unique(df$id), function(x) reg_pred(data, x)))
+
+ggplot(df, aes(x=time, y=pred, group=as.factor(id))) + 
+  geom_line() + facet_wrap(~tx) + 
+  theme(text = element_text(size=10)) +
+  xlab("Time") + ylab("Predicted Strength") + 
+  ggtitle("Predicted Strength by Time and Treatment") 
+```
+
+3. Optional: Consider whether there are other plots that might be useful, and include one more if you want to. (For example, box plots of the distribution of strength by both week and tx
+
+```{r, fig.height=3.5}
+ggplot(df, aes(x = reorder(as.factor(time), y, FUN=median, na.rm=T), y = y)) + 
+  geom_boxplot() + facet_grid(.~tx, space="free", scales="free") +
+  theme(text = element_text(size=10)) +
+  xlab("Week") + ylab("Strength") +
+  ggtitle("Distribution of Strength by Week and Treatment")
+```
+
+4. Write a short paragraph describing what the plots suggest about the bulleted questions above
+
+> * Does weight training have any impact on strength? Yes, it appears that there is an effect due to strength training.
+> * Is there a difference between tx 2 and 3? The predicted strength line chart seems to show a difference between 2 and 3, but it also looks like treatment 3 may have had greater strength to begin with.
+> * Which training program works quickest to increase strength? The boxplots and line charts (both true and predicted) seem to suggest a greater improvement in strength over time due to treatment 3. It seems like treatment 2 has some effect when compared to treatment 1 from the box plots, but not as large as treatment 3.
+
+5. Reduce the data for each subject to 1 number – the slope of the change in strength estimated in each person separately (can use program below). One way you could test the treatment effect of tx=3 versus tx=2 on this outcome (ignoring tx=1) is to use a standard two-sample t-test.
+
+```{r}
+reg_slope = function(data, x) {
+  m = lm(y ~ time, data = df[df$id == x,])
+  return(m$coeff[2])
+}
+
+slopes = unlist(sapply(unique(df$id), function(x) reg_slope(data, x)))
+df_slopes = df[!duplicated(df[,c("id","tx")]), c("id","tx")]
+df_slopes$slopes = slopes
+tx2 = df_slopes[df_slopes$tx == 2,]
+tx3 = df_slopes[df_slopes$tx == 3,]
+t.test(tx2$slopes, tx3$slopes, paired = FALSE)
+```
+
+6. To further explore the relationship between treatment and group, try fitting a simple cross sectional model to this data as discussed in Chapter 3. Look the model with both naïve and robust standard errors. What happens if you expand the model to include a longitudinal term?
+
+> The coefficient estimates between naive and robust regressions are the same, while the standard errors are slightly different, but not by much. When adding a longitudinal term (i.e. `time`), the estimates for each treatment don't seem to change much in comparison to the simple cross-sectional model. The `time` estimate itself is small and not significant.
+
+```{r, message=FALSE}
+library(sandwich)
+library(lmtest)
+
+naive_model = lm(y ~ tx, data = df)
+# naive SE
+summary(naive_model)$coef
+# This is the default method for robust SE in Stata per:
+# https://stats.stackexchange.com/questions/117052/replicating-statas-robust-option-in-r
+coeftest(naive_model, vcov = vcovHC(naive_model, "HC1"))
+
+longitudinal_model = lm(y ~ tx + time, data = df)
+# naive SE
+summary(longitudinal_model)$coef
+# robust SE
+coeftest(longitudinal_model, vcov = vcovHC(longitudinal_model, "HC1"))
+```
