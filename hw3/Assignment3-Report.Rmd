@@ -71,21 +71,22 @@ t.test(tx2$slopes, tx3$slopes, paired = FALSE)
 
 6. To further explore the relationship between treatment and group, try fitting a simple cross sectional model to this data as discussed in Chapter 3. Look the model with both naïve and robust standard errors. What happens if you expand the model to include a longitudinal term?
 
-> The coefficient estimates between naive and robust regressions are the same, while the standard errors are slightly different, but not by much. When adding a longitudinal term (i.e. `time`), the estimates for each treatment don't seem to change much in comparison to the simple cross-sectional model. The `time` estimate itself is small and not significant.
+> I created my naive model using treatment ("tx") and cross-sectional time ("time") variables. In my longitudinal model, I added a longitudinal term ("timediff"). This longitudinal term was automatically removed by the model since it is collinear with the cross-sectional "time" variable. The coefficient estimates between naive and robust regressions are the same, while the standard errors are slightly different, but not by much. The estimate of "time" is small and not significant.
 
 ```{r, message=FALSE}
 library(sandwich)
 library(lmtest)
 
-naive_model = lm(y ~ tx, data = df)
-# naive SE
+# naive model
+naive_model = lm(y ~ tx + time, data = df)
 summary(naive_model)$coef
 # This is the default method for robust SE in Stata per:
 # https://stats.stackexchange.com/questions/117052/replicating-statas-robust-option-in-r
 coeftest(naive_model, vcov = vcovHC(naive_model, "HC1"))
 
-longitudinal_model = lm(y ~ tx + time, data = df)
-# naive SE
+# longitudinal model
+df$timediff = df$time - 1
+longitudinal_model = lm(y ~ tx + time + timediff, data = df)
 summary(longitudinal_model)$coef
 # robust SE
 coeftest(longitudinal_model, vcov = vcovHC(longitudinal_model, "HC1"))
